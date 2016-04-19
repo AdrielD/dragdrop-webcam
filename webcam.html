@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title></title>
-		<!--script src="base64binary.js"></script-->
+		<!-- script src="base64binary.js"></script> -->
 		<!-- <script src="facebook.js"></script> -->
 		<script src="webcam.js"></script>
 	</head>
@@ -16,7 +16,8 @@
 			<img id="compass-icon" draggable="false" style="position: absolute; left:96px; top:0; width: 32px; height: 32px" src="images/compass.png">
 			<img id="earth-globe-icon" draggable="false" style="position: absolute; left:128px; top:0; width: 32px; height: 32px" src="images/earth-globe.png">
 			<img id="flasks-icon" draggable="false" style="position: absolute; left:160px; top:0; width: 32px; height: 32px" src="images/flasks.png">
-			<button onclick="webcam.takePhoto()">Click!</button>
+			<button id="take-photo" onclick="webcam.takePhoto()">Click!</button>
+			<button id="redo" style="display: none"; onclick="webcam.redo()">Redo!</button>
 		</div>
 		<script>
 			webcam.start("camera", {draggables: ["apple-icon", "atom-icon", "book-icon"]});
