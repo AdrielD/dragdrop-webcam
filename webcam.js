@@ -88,16 +88,8 @@
 
 	document.addEventListener("mousemove", function(e) {
 		if(dragging !== null) {
-			// console.log(e);
-			// console.log(e.clientY);
-			// console.log(e.offsetY);
-			// console.log(e.clientX);
-			// console.log(e.offsetX);
-			var peca = document.getElementById("peca");
-			// dragging.style.top = (e.clientY - e.offsetY) + "px";
-			// dragging.style.left = (e.clientX - e.offsetX) + "px";
-			dragging.style.top = (e.clientY - peca.offsetTop) + "px";
-			dragging.style.left = (e.clientX - peca.offsetLeft - 16) + "px";
+			dragging.style.top = (e.clientY - dragging.parentElement.offsetTop) + "px";
+			dragging.style.left = (e.clientX - dragging.parentElement.offsetLeft - 16) + "px";
 		}
 	});
 
@@ -124,6 +116,24 @@
 
 		document.getElementById("take-photo").style.display = "none";
 		document.getElementById("redo").style.display = "inline-block";
+
+		// var data = canvas.toDataURL('image/png');
+		// var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
+		// var decodedPng = Base64Binary.decode(encodedPng);
+
+		// console.log(decodedPng);
+
+		// var formData = "";
+
+		// for (var i = 0; i < decodedPng.length; ++i ) {
+  //     formData += String.fromCharCode(decodedPng[i] & 0xff );
+  //   }
+
+		// var bytes = Array.prototype.map.call(formData, function(c) {
+  //      return c.charCodeAt(0) & 0xff;
+  //   });
+  //   var a = new Uint8Array(bytes);
+  //   console.log(a);
 	}
 
 	function redo() {
