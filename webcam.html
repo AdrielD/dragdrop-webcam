@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<!--script src="base64binary.js"></script-->
+		<!-- <script src="facebook.js"></script> -->
+		<script src="webcam.js"></script>
+	</head>
+	<body style="margin: 0 auto; padding: 0;">
+		<div id="peca" style="width: 900px; height: 400px; margin: 50px auto 0; text-align: center; border: 1px solid #000; position: relative;">
+			<div id="camera" style="width: 200px; height: 250px; text-align: center; margin: 50px auto 0; border: 1px solid #000;">
+			</div>
+			<img id="apple-icon" draggable="false" style="position: absolute; left:0; top:0; width: 32px; height: 32px" src="images/apple.png">
+			<img id="atom-icon" draggable="false" style="position: absolute; left:32px; top:0; width: 32px; height: 32px" src="images/atom.png">
+			<img id="book-icon" draggable="false" style="position: absolute; left:64px; top:0; width: 32px; height: 32px" src="images/book.png">
+			<img id="compass-icon" draggable="false" style="position: absolute; left:96px; top:0; width: 32px; height: 32px" src="images/compass.png">
+			<img id="earth-globe-icon" draggable="false" style="position: absolute; left:128px; top:0; width: 32px; height: 32px" src="images/earth-globe.png">
+			<img id="flasks-icon" draggable="false" style="position: absolute; left:160px; top:0; width: 32px; height: 32px" src="images/flasks.png">
+			<button onclick="webcam.takePhoto()">Click!</button>
+		</div>
+		<script>
+			webcam.start("camera", {draggables: ["apple-icon", "atom-icon", "book-icon"]});
+		</script>
+	</body>
+</html>
