@@ -7,7 +7,8 @@
 	}
 
 	function drag(e) {
-		dragging = document.getElementById(e.srcElement.id);
+		console.log(e);
+		dragging = document.getElementById(e.target.id);
 	}
 
 	function release() {
@@ -24,65 +25,62 @@
     };
 	}
 
-	// function logoutUser() {
-	// 	FB.logout(function(response) {
-	// 		console.log(response);
-  // 		user.innerHTML = "Not logged in";
-	// 		logout.style.display = "none";
-	// 		cancelShare();
-	// 	});
-	// }
+	function logoutUser() {
+		FB.logout(function(response) {
+			console.log(response);
+		});
+	}
 
-	// function doShare() {
-	// 	var data = canvas.toDataURL('image/png');
-	// 	var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
-	// 	var decodedPng = Base64Binary.decode(encodedPng);
+	function doShare() {
+		var data = canvas.toDataURL('image/png');
+		var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
+		var decodedPng = Base64Binary.decode(encodedPng);
 
-	// 	FB.login(function(response) {
-	// 		if (response.status === "connected") {
-	// 			var auth = response.authResponse.accessToken;
-	// 			FB.api('/me', function(response) {
-	// 			  user.innerHTML = "Logged as: " + response.name;
-	// 			  logout.style.display = "block";
-	// 			  console.log(response);
-	// 				postImageToFacebook(auth, "scary-photo", "image/png", decodedPng, text.value);
-	// 				postDone.style.display = "block";
-	// 				setTimeout(function() {
-	// 					postDone.style.display = "none";
-	// 				}, 3000);
-	// 			});
-	// 	  }
-	// 	  else {
-	// 	  	console.log("not logged");
-	// 	  }
-	// 	}, {scope: "publish_actions"});
-	// }
+		FB.login(function(response) {
+			if (response.status === "connected") {
+				var auth = response.authResponse.accessToken;
+				FB.api('/me', function(response) {
+				  user.innerHTML = "Logged as: " + response.name;
+				  logout.style.display = "block";
+				  console.log(response);
+					postImageToFacebook(auth, "scary-photo", "image/png", decodedPng, text.value);
+					postDone.style.display = "block";
+					setTimeout(function() {
+						postDone.style.display = "none";
+					}, 3000);
+				});
+		  }
+		  else {
+		  	console.log("not logged");
+		  }
+		}, {scope: "publish_actions"});
+	}
 
 	// https://gist.github.com/andyburke/1498758
-	// function postImageToFacebook(authToken, filename, mimeType, imageData, message ) {
- //    // this is the multipart/form-data boundary we'll use
- //    var boundary = '----Img';
- //    // let's encode our image file, which is contained in the var
- //    var formData = '--' + boundary + '\r\n';
- //    formData += 'Content-Disposition: form-data; name="source"; filename="' + filename + '"\r\n';
- //    formData += 'Content-Type: ' + mimeType + '\r\n\r\n';
- //    for ( var i = 0; i < imageData.length; ++i ) {
- //        formData += String.fromCharCode( imageData[ i ] & 0xff );
- //    }
- //    formData += '\r\n';
- //    formData += '--' + boundary + '\r\n';
- //    formData += 'Content-Disposition: form-data; name="message"\r\n\r\n';
- //    formData += message + '\r\n';
- //    formData += '--' + boundary + '--\r\n';
+	function postImageToFacebook(authToken, filename, mimeType, imageData, message ) {
+    // this is the multipart/form-data boundary we'll use
+    var boundary = '----Img';
+    // let's encode our image file, which is contained in the var
+    var formData = '--' + boundary + '\r\n';
+    formData += 'Content-Disposition: form-data; name="source"; filename="' + filename + '"\r\n';
+    formData += 'Content-Type: ' + mimeType + '\r\n\r\n';
+    for ( var i = 0; i < imageData.length; ++i ) {
+        formData += String.fromCharCode( imageData[ i ] & 0xff );
+    }
+    formData += '\r\n';
+    formData += '--' + boundary + '\r\n';
+    formData += 'Content-Disposition: form-data; name="message"\r\n\r\n';
+    formData += message + '\r\n';
+    formData += '--' + boundary + '--\r\n';
     
- //    var xhr = new XMLHttpRequest();
- //    xhr.open( 'POST', 'https://graph.facebook.com/me/photos?access_token=' + authToken, true );
- //    xhr.onerror = xhr.onload = function() {
- //        console.log( xhr.responseText );
- //    };
- //    xhr.setRequestHeader( "Content-Type", "multipart/form-data; boundary=" + boundary );
- //    xhr.sendAsBinary(formData);
-	// }
+    var xhr = new XMLHttpRequest();
+    xhr.open( 'POST', 'https://graph.facebook.com/me/photos?access_token=' + authToken, true );
+    xhr.onerror = xhr.onload = function() {
+        console.log( xhr.responseText );
+    };
+    xhr.setRequestHeader( "Content-Type", "multipart/form-data; boundary=" + boundary );
+    xhr.sendAsBinary(formData);
+	}
 
 	document.addEventListener("mouseup", release);
 
