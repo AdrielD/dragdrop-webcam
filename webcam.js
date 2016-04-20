@@ -91,10 +91,10 @@
 
 	function takePhoto() {
 		clear();
-		video.style.display = "none";
 		canvas.style.display = "block";
 
-		context.drawImage(video, 0, 0, (height / (3 / 4)), height);
+		context.drawImage(video, ((width - video.offsetWidth) / 2), 0, video.offsetWidth, height);
+		video.style.display = "none";
 
 		if(draggables.length !== 0) {
 			for(var i in draggables) {
@@ -166,23 +166,25 @@
 		// height = width / (4 / 3);
 
 		video = document.createElement("video");
+		container.appendChild(video);
 		video.id = "webcam-video";
+		// video.style.width = "100% !important";
 		video.style.width = (height / (3 / 4)) + "px";
 		// video.style.width = width + "px";
+		// video.style.height = "auto !important";
 		video.style.height = height + "px";
 		video.style.display = "block";
 		video.style.position = "relative";
-		video.style.margin = "0 auto";
-		video.style.textAlign = "center";
-		container.appendChild(video);
+		video.style.marginLeft = ((width - video.offsetWidth) / 2) + "px";
+		// video.style.objectFit = "none";
 
 		canvas = document.createElement("canvas");
+		container.appendChild(canvas);
 		canvas.id = "webcam-canvas";
 		canvas.width = width;
 		canvas.height = height;
 		canvas.style.display = "none";
 		canvas.style.position = "relative";
-		container.appendChild(canvas);
 
 		context = canvas.getContext("2d");
 
