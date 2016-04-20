@@ -7,7 +7,6 @@
 	}
 
 	function drag(e) {
-		console.log(e);
 		dragging = document.getElementById(e.target.id);
 	}
 
@@ -41,13 +40,8 @@
 				var auth = response.authResponse.accessToken;
 				FB.api('/me', function(response) {
 				  user.innerHTML = "Logged as: " + response.name;
-				  logout.style.display = "block";
 				  console.log(response);
 					postImageToFacebook(auth, "scary-photo", "image/png", decodedPng, text.value);
-					postDone.style.display = "block";
-					setTimeout(function() {
-						postDone.style.display = "none";
-					}, 3000);
 				});
 		  }
 		  else {
@@ -97,10 +91,10 @@
 
 	function takePhoto() {
 		clear();
-		// video.style.display = "none";
-		// canvas.style.display = "block";
+		video.style.display = "none";
+		canvas.style.display = "block";
 
-		// context.drawImage(video, 0, 0, width, height);
+		context.drawImage(video, 0, 0, (height / (3 / 4)), height);
 
 		if(draggables.length !== 0) {
 			for(var i in draggables) {
@@ -145,6 +139,8 @@
 
 		document.getElementById("take-photo").style.display = "inline-block";
 		document.getElementById("redo").style.display = "none";
+		video.style.display = "block";
+		canvas.style.display = "none";
 	}
 
 	function is_inside(obj1, obj2) {
@@ -164,23 +160,27 @@
 	
 	function start(container, options) {
 		container = document.getElementById(not_blank(container) ? container : "webcam");
+		container.style.overflow = "hidden";
 		width = container.offsetWidth;
 		height = container.offsetHeight;
 		// height = width / (4 / 3);
 
 		video = document.createElement("video");
 		video.id = "webcam-video";
-		video.style.width = width + "px";
+		video.style.width = (height / (3 / 4)) + "px";
+		// video.style.width = width + "px";
 		video.style.height = height + "px";
-		video.style.display = "none";
+		video.style.display = "block";
 		video.style.position = "relative";
+		video.style.margin = "0 auto";
+		video.style.textAlign = "center";
 		container.appendChild(video);
 
 		canvas = document.createElement("canvas");
 		canvas.id = "webcam-canvas";
 		canvas.width = width;
 		canvas.height = height;
-		canvas.style.display = "block";
+		canvas.style.display = "none";
 		canvas.style.position = "relative";
 		container.appendChild(canvas);
 
@@ -194,6 +194,17 @@
 				document.getElementById(draggables[i]).addEventListener("mousedown", drag);
 			}
 		}
+
+		navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+		navigator.getUserMedia({ video: true }, function(stream) {
+			console.log("streaming...");
+			video.src = window.URL.createObjectURL(stream);
+			video.addEventListener("canplaythrough", function() {
+				video.play();
+			});
+		}, function(error) {
+			console.error(error);
+		});
 	}
 
 	window.webcam = {};

@@ -55,16 +55,16 @@
 		cancel.addEventListener("click", cancelShare);
 		logout.addEventListener("click", logoutUser);
 
-		// navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-		// navigator.getUserMedia({ video: true }, function(stream) {
-		// 	console.log("streaming...");
-		// 	video.src = window.URL.createObjectURL(stream);
-		// 	video.addEventListener("canplaythrough", function() {
-		// 		video.play();
-		// 	});
-		// }, function(error) {
-		// 	console.error(error.name);
-		// });
+		navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+		navigator.getUserMedia({ video: true }, function(stream) {
+			console.log("streaming...");
+			video.src = window.URL.createObjectURL(stream);
+			video.addEventListener("canplaythrough", function() {
+				video.play();
+			});
+		}, function(error) {
+			console.error(error.name);
+		});
 
 	}
 
