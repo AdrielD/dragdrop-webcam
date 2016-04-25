@@ -41,7 +41,8 @@
 				FB.api('/me', function(response) {
 				  // user.innerHTML = "Logged as: " + response.name;
 				  console.log(response);
-					postImageToFacebook(auth, "photo", "image/png", decodedPng, text.value);
+					// postImageToFacebook(auth, "photo", "image/png", decodedPng, text.value);
+					postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
 				});
 		  }
 		  else {
