@@ -41,7 +41,7 @@
 				FB.api('/me', function(response) {
 				  user.innerHTML = "Logged as: " + response.name;
 				  console.log(response);
-					postImageToFacebook(auth, "scary-photo", "image/png", decodedPng, text.value);
+					postImageToFacebook(auth, "photo", "image/png", decodedPng, text.value);
 				});
 		  }
 		  else {
@@ -213,5 +213,6 @@
 	window.webcam.start = start;
 	window.webcam.takePhoto = takePhoto;
 	window.webcam.redo = redo;
+	window.webcam.share = doShare;
 
 })();

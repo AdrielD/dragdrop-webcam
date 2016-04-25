@@ -18,6 +18,7 @@
 			<img id="flasks-icon" draggable="false" style="position: absolute; left:160px; top:0; width: 32px; height: 32px" src="images/flasks.png">
 			<button id="take-photo" onclick="webcam.takePhoto()">Click!</button>
 			<button id="redo" style="display: none"; onclick="webcam.redo()">Redo!</button>
+			<button id="redo" style="display: block"; onclick="webcam.share()">Share!</button>
 		</div>
 		<script>
 			webcam.start("camera", {draggables: ["apple-icon", "atom-icon", "book-icon"]});
