@@ -1,6 +1,6 @@
 // https://developers.facebook.com/docs/graph-api/reference/v2.6/user/photos
 (function() {
-	var	width, height, container, video, canvas, context, draggables, dragging;
+	var	width, height, container, video, canvas, context, draggables, dragging, user;
 
 	function not_blank(object) {
 		return !(object === null || object === undefined || object.trim() === "");
@@ -26,6 +26,7 @@
 
 	function logoutUser() {
 		FB.logout(function(response) {
+			user = "";
 			console.log(response);
 		});
 	}
@@ -40,6 +41,7 @@
 				var auth = response.authResponse.accessToken;
 				FB.api('/me', function(response) {
 				  // user.innerHTML = "Logged as: " + response.name;
+				  user = response.name;
 				  console.log(response);
 					// postImageToFacebook(auth, "photo", "image/png", decodedPng, text.value);
 					postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
@@ -100,7 +102,7 @@
 		if(draggables.length !== 0) {
 			for(var i in draggables) {
 				var img = document.getElementById(draggables[i]);
-				if(is_inside(img, canvas)) {
+				if(isInside(img, canvas)) {
 					context.drawImage(img, img.offsetLeft-canvas.offsetLeft, img.offsetTop-canvas.offsetTop, img.offsetWidth, img.offsetHeight);
 				}
 				img.style.display = "none";
@@ -109,24 +111,6 @@
 
 		document.getElementById("take-photo").style.display = "none";
 		document.getElementById("redo").style.display = "inline-block";
-
-		// var data = canvas.toDataURL('image/png');
-		// var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
-		// var decodedPng = Base64Binary.decode(encodedPng);
-
-		// console.log(decodedPng);
-
-		// var formData = "";
-
-		// for (var i = 0; i < decodedPng.length; ++i ) {
-  //     formData += String.fromCharCode(decodedPng[i] & 0xff );
-  //   }
-
-		// var bytes = Array.prototype.map.call(formData, function(c) {
-  //      return c.charCodeAt(0) & 0xff;
-  //   });
-  //   var a = new Uint8Array(bytes);
-  //   console.log(a);
 	}
 
 	function redo() {
@@ -144,7 +128,7 @@
 		canvas.style.display = "none";
 	}
 
-	function is_inside(obj1, obj2) {
+	function isInside(obj1, obj2) {
 		o1x1 = obj1.offsetLeft;
 		o1x2 = obj1.offsetLeft + obj1.offsetWidth;
 		o2x1 = obj2.offsetLeft;
@@ -215,5 +199,6 @@
 	window.webcam.takePhoto = takePhoto;
 	window.webcam.redo = redo;
 	window.webcam.share = doShare;
+	window.webcam.logout = logoutUser;
 
 })();

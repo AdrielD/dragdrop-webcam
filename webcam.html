@@ -18,10 +18,33 @@
 			<img id="flasks-icon" draggable="false" style="position: absolute; left:160px; top:0; width: 32px; height: 32px" src="images/flasks.png">
 			<button id="take-photo" onclick="webcam.takePhoto()">Click!</button>
 			<button id="redo" style="display: none"; onclick="webcam.redo()">Redo!</button>
-			<button id="redo" style="display: block"; onclick="webcam.share()">Share!</button>
+			<button id="share" style="display: block"; onclick="webcam.share()">Share!</button>
+			<button id="logout" style="display: block"; onclick="webcam.logout()">Logout</button>
+			<button id="side1" style="display: block"; onclick="startSide1()">Side 1</button>
+			<button id="side2" style="display: block"; onclick="startSide2()">Side 2</button>
 		</div>
 		<script>
-			webcam.start("camera", {draggables: ["apple-icon", "atom-icon", "book-icon"]});
+
+			function startSide1() {
+				webcam.start("camera", {
+					draggables: ["apple-icon", "atom-icon", "book-icon"],
+					takePhoto: "take-photo",
+					redo: "redo",
+					share: "share",
+					logout: "logout"
+				});	
+			}
+
+			function startSide2() {
+				webcam.start("camera", {
+					draggables: ["compass-icon", "earth-globe-icon", "flasks-icon"],
+					takePhoto: "take-photo",
+					redo: "redo",
+					share: "share",
+					logout: "logout"
+				});	
+			}
+
 		</script>
 	</body>
 </html>
