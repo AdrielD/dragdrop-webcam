@@ -79,14 +79,7 @@
     xhr.sendAsBinary(formData);
 	}
 
-	document.addEventListener("mouseup", release);
-
-	document.addEventListener("mousemove", function(e) {
-		if(dragging !== null) {
-			dragging.style.top = (e.clientY - dragging.parentElement.offsetTop) + "px";
-			dragging.style.left = (e.clientX - dragging.parentElement.offsetLeft - 16) + "px";
-		}
-	});
+	
 
 	function clear() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
@@ -142,6 +135,26 @@
 		return ((o1x2 > o2x1 && o1x2 < o2x2) || (o1x1 > o2x1 && o1x1 < o2x2)) &&
 					((o1y2 > o2y1 && o1y2 < o2y2) || (o1y1 > o2y1 && o1y1 < o2y2));
 	}
+
+	function reset() {
+		console.log(video);
+		console.log(canvas);
+		console.log(container);
+
+		if(draggables.length !== 0) {
+			for(var i in draggables) {
+				document.getElementById(draggables[i]).addEventListener("mousedown", drag);
+			}
+		}
+
+		if (video != undefined) {
+			container.removeChild(video);
+		}
+
+		if (canvas != undefined) {
+			container.removeChild(canvas);
+		}
+	}
 	
 	function start(container, options) {
 		container = document.getElementById(not_blank(container) ? container : "webcam");
@@ -149,6 +162,7 @@
 		width = container.offsetWidth;
 		height = container.offsetHeight;
 		// height = width / (4 / 3);
+		console.log(container);
 
 		video = document.createElement("video");
 		container.appendChild(video);
@@ -176,6 +190,15 @@
 		draggables = options.draggables;
 		dragging = null;
 
+		document.addEventListener("mouseup", release);
+
+		document.addEventListener("mousemove", function(e) {
+			if(dragging !== null) {
+				dragging.style.top = (e.clientY - dragging.parentElement.offsetTop) + "px";
+				dragging.style.left = (e.clientX - dragging.parentElement.offsetLeft - 16) + "px";
+			}
+		});
+
 		if(draggables.length !== 0) {
 			for(var i in draggables) {
 				document.getElementById(draggables[i]).addEventListener("mousedown", drag);
@@ -196,6 +219,7 @@
 
 	window.webcam = {};
 	window.webcam.start = start;
+	window.webcam.reset = reset;
 	window.webcam.takePhoto = takePhoto;
 	window.webcam.redo = redo;
 	window.webcam.share = doShare;
