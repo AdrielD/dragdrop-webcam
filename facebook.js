@@ -1,7 +1,8 @@
 window.fbAsyncInit = function() {
   FB.init({
-    appId      : '227393377626524', // Dev 
+    // appId      : '227393377626524', // Dev 
     // appId      : '224702951228900', // Prod
+    appId      : (window.location.hostname == 'localhost') ? '227393377626524' : '224702951228900',
     xfbml      : true,
     version    : 'v2.6'
   });
