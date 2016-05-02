@@ -1,6 +1,7 @@
 // https://developers.facebook.com/docs/graph-api/reference/v2.6/user/photos
 (function() {
-	var	width, height, container, video, canvas, context, draggables, dragging, user;
+	var	width, height, container, video, canvas, context, draggables, dragging, user, 
+	redo_button, takePhoto_button, share_button, logout_button, upload_button;
 
 	function not_blank(object) {
 		return !(object === null || object === undefined || object.trim() === "");
@@ -12,16 +13,6 @@
 
 	function release() {
 		dragging = null;
-	}
-
-	// https://gist.github.com/andyburke/1498758
-	if ( XMLHttpRequest.prototype.sendAsBinary === undefined ) {
-    XMLHttpRequest.prototype.sendAsBinary = function(string) {
-      var bytes = Array.prototype.map.call(string, function(c) {
-          return c.charCodeAt(0) & 0xff;
-      });
-      this.send(new Uint8Array(bytes).buffer);
-    };
 	}
 
 	function logoutUser() {
@@ -54,6 +45,17 @@
 
 	// https://gist.github.com/andyburke/1498758
 	function postImageToFacebook(authToken, filename, mimeType, imageData, message ) {
+
+		// https://gist.github.com/andyburke/1498758
+		if ( XMLHttpRequest.prototype.sendAsBinary === undefined ) {
+		  XMLHttpRequest.prototype.sendAsBinary = function(string) {
+		    var bytes = Array.prototype.map.call(string, function(c) {
+		        return c.charCodeAt(0) & 0xff;
+		    });
+		    this.send(new Uint8Array(bytes).buffer);
+		  };
+		}
+
     // this is the multipart/form-data boundary we'll use
     var boundary = '----Img';
     // let's encode our image file, which is contained in the var
@@ -189,6 +191,21 @@
 		draggables = options.draggables;
 		dragging = null;
 
+		redo_button = document.getElementById(not_blank(options.redo) ? options.redo : "redo");
+		redo_button.addEventListener("click", redo);
+
+		takePhoto_button = document.getElementById(not_blank(options.takePhoto) ? options.takePhoto : "takePhoto");
+		takePhoto_button.addEventListener("click", takePhoto_button);
+
+		share_button = document.getElementById(not_blank(options.share) ? options.share : "share");
+		share_button.addEventListener("click", doShare);
+
+		logout_button = document.getElementById(not_blank(options.logout) ? options.logout : "logout");
+		logout_button.addEventListener("click", logoutUser);
+
+		upload_button = document.getElementById(not_blank(options.upload) ? options.upload : "upload");
+		upload_button.addEventListener('change', handleImage, false);
+
 		document.addEventListener("mouseup", release);
 
 		document.addEventListener("mousemove", function(e) {
@@ -203,9 +220,6 @@
 				document.getElementById(draggables[i]).addEventListener("mousedown", drag);
 			}
 		}
-
-		var imageLoader = document.getElementById('imageLoader');
-    imageLoader.addEventListener('change', handleImage, false);
 
 		navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 		navigator.getUserMedia({ video: true }, function(stream) {
@@ -223,9 +237,4 @@
 
 	window.webcam = {};
 	window.webcam.start = start;
-	window.webcam.takePhoto = takePhoto;
-	window.webcam.redo = redo;
-	window.webcam.share = doShare;
-	window.webcam.logout = logoutUser;
-
 })();

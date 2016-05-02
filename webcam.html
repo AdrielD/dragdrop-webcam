@@ -16,11 +16,11 @@
 			<img id="compass-icon" draggable="false" style="position: absolute; left:96px; top:0; width: 32px; height: 32px" src="images/compass.png">
 			<img id="earth-globe-icon" draggable="false" style="position: absolute; left:128px; top:0; width: 32px; height: 32px" src="images/earth-globe.png">
 			<img id="flasks-icon" draggable="false" style="position: absolute; left:160px; top:0; width: 32px; height: 32px" src="images/flasks.png">
-			<button id="take-photo" onclick="webcam.takePhoto()">Click!</button>
-			<button id="redo" style="display: none"; onclick="webcam.redo()">Redo!</button>
-			<button id="share" style="display: block"; onclick="webcam.share()">Share!</button>
-			<button id="logout" style="display: block"; onclick="webcam.logout()">Logout</button>
-			<input type="file" id="imageLoader" name="imageLoader"/>
+			<button id="take-photo">Click!</button>
+			<button id="redo" style="display: none";>Redo!</button>
+			<button id="share" style="display: block";>Share!</button>
+			<button id="logout" style="display: block";>Logout</button>
+			<input type="file" id="upload"/>
 		</div>
 		<script>
 			webcam.start("camera", {
@@ -28,7 +28,8 @@
 				takePhoto: "take-photo",
 				redo: "redo",
 				share: "share",
-				logout: "logout"
+				logout: "logout",
+				upload: "upload",
 			});
 		</script>
 	</body>
