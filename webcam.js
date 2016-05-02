@@ -23,6 +23,8 @@
 	}
 
 	function doShare() {
+		preparePhoto();
+		
 		var data = canvas.toDataURL('image/png');
 		var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
 		var decodedPng = Base64Binary.decode(encodedPng);
@@ -33,7 +35,6 @@
 				FB.api('/me', function(response) {
 				  // user.innerHTML = "Logged as: " + response.name;
 				  user = response.name;
-					// postImageToFacebook(auth, "photo", "image/png", decodedPng, text.value);
 					postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
 				});
 		  }
@@ -70,7 +71,7 @@
     formData += 'Content-Disposition: form-data; name="message"\r\n\r\n';
     formData += message + '\r\n';
     formData += '--' + boundary + '--\r\n';
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open( 'POST', 'https://graph.facebook.com/me/photos?access_token=' + authToken, true );
     xhr.onerror = xhr.onload = function() {
@@ -88,23 +89,17 @@
 		var reader = new FileReader();
     
     reader.onload = function(event){
-      var img = new Image();
-      img.onload = function(){
-        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var up_img = new Image();
+      up_img.onload = function(){
+        context.drawImage(up_img, 0, 0, canvas.width, canvas.height);
       };
-      img.src = event.target.result;
+      up_img.src = event.target.result;
     };
 
     reader.readAsDataURL(e.target.files[0]);
 	}
 
-	function takePhoto() {
-		clear();
-		canvas.style.display = "block";
-
-		context.drawImage(video, ((width - video.offsetWidth) / 2), 0, video.offsetWidth, height);
-		video.style.display = "none";
-
+	function preparePhoto() {
 		if(draggables.length !== 0) {
 			for(var i in draggables) {
 				var img = document.getElementById(draggables[i]);
@@ -114,9 +109,19 @@
 				img.style.display = "none";
 			}
 		}
+	}
 
-		document.getElementById("take-photo").style.display = "none";
-		document.getElementById("redo").style.display = "inline-block";
+	function takePhoto() {
+		clear();
+		canvas.style.display = "block";
+
+		context.drawImage(video, ((width - video.offsetWidth) / 2), 0, video.offsetWidth, height);
+		video.style.display = "none";
+
+		// preparePhoto();
+
+		takePhoto_button.style.display = "none";
+		redo_button.style.display = "inline-block";
 	}
 
 	function redo() {
@@ -127,9 +132,8 @@
 				document.getElementById(draggables[i]).style.display = "block";
 			}
 		}
-
-		document.getElementById("take-photo").style.display = "inline-block";
-		document.getElementById("redo").style.display = "none";
+		takePhoto_button.style.display = "inline-block";
+		redo_button.style.display = "none";
 		showVideoHideCanvas();
 	}
 
@@ -195,7 +199,7 @@
 		redo_button.addEventListener("click", redo);
 
 		takePhoto_button = document.getElementById(not_blank(options.takePhoto) ? options.takePhoto : "takePhoto");
-		takePhoto_button.addEventListener("click", takePhoto_button);
+		takePhoto_button.addEventListener("click", takePhoto);
 
 		share_button = document.getElementById(not_blank(options.share) ? options.share : "share");
 		share_button.addEventListener("click", doShare);
