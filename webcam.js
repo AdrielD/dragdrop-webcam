@@ -42,7 +42,6 @@
 				FB.api('/me', function(response) {
 				  // user.innerHTML = "Logged as: " + response.name;
 				  user = response.name;
-				  console.log(response);
 					// postImageToFacebook(auth, "photo", "image/png", decodedPng, text.value);
 					postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
 				});
@@ -73,16 +72,28 @@
     var xhr = new XMLHttpRequest();
     xhr.open( 'POST', 'https://graph.facebook.com/me/photos?access_token=' + authToken, true );
     xhr.onerror = xhr.onload = function() {
-        console.log( xhr.responseText );
+      console.log( xhr.responseText );
     };
     xhr.setRequestHeader( "Content-Type", "multipart/form-data; boundary=" + boundary );
     xhr.sendAsBinary(formData);
 	}
 
-	
-
 	function clear() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
+	}
+
+	function handleImage(e) {
+		var reader = new FileReader();
+    
+    reader.onload = function(event){
+      var img = new Image();
+      img.onload = function(){
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = event.target.result;
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
 	}
 
 	function takePhoto() {
@@ -117,8 +128,7 @@
 
 		document.getElementById("take-photo").style.display = "inline-block";
 		document.getElementById("redo").style.display = "none";
-		video.style.display = "block";
-		canvas.style.display = "none";
+		showVideoHideCanvas();
 	}
 
 	function isInside(obj1, obj2) {
@@ -136,24 +146,14 @@
 					((o1y2 > o2y1 && o1y2 < o2y2) || (o1y1 > o2y1 && o1y1 < o2y2));
 	}
 
-	function reset() {
-		console.log(video);
-		console.log(canvas);
-		console.log(container);
+	function showVideoHideCanvas() {
+		video.style.display = "block";
+		canvas.style.display = "none";
+	}
 
-		if(draggables.length !== 0) {
-			for(var i in draggables) {
-				document.getElementById(draggables[i]).addEventListener("mousedown", drag);
-			}
-		}
-
-		if (video != undefined) {
-			container.removeChild(video);
-		}
-
-		if (canvas != undefined) {
-			container.removeChild(canvas);
-		}
+	function showCanvasHideVideo() {
+		video.style.display = "none";
+		canvas.style.display = "block";
 	}
 	
 	function start(container, options) {
@@ -162,7 +162,6 @@
 		width = container.offsetWidth;
 		height = container.offsetHeight;
 		// height = width / (4 / 3);
-		console.log(container);
 
 		video = document.createElement("video");
 		container.appendChild(video);
@@ -205,6 +204,9 @@
 			}
 		}
 
+		var imageLoader = document.getElementById('imageLoader');
+    imageLoader.addEventListener('change', handleImage, false);
+
 		navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 		navigator.getUserMedia({ video: true }, function(stream) {
 			console.log("streaming...");
@@ -214,12 +216,13 @@
 			});
 		}, function(error) {
 			console.error(error);
+			console.error("Could not find camera... Upload a photo instead...");
+			showCanvasHideVideo();
 		});
 	}
 
 	window.webcam = {};
 	window.webcam.start = start;
-	window.webcam.reset = reset;
 	window.webcam.takePhoto = takePhoto;
 	window.webcam.redo = redo;
 	window.webcam.share = doShare;
