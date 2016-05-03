@@ -11,8 +11,16 @@
 		dragging = document.getElementById(e.target.id);
 	}
 
-	function release() {
+	function release(e) {
+		moveImage(e);
 		dragging = null;
+	}
+
+	function moveImage(e) {
+		if(dragging !== null) {
+			dragging.style.top = (e.clientY - dragging.parentElement.offsetTop) + "px";
+			dragging.style.left = (e.clientX - dragging.parentElement.offsetLeft - 16) + "px";
+		}
 	}
 
 	function logoutUser() {
@@ -24,7 +32,7 @@
 
 	function doShare() {
 		preparePhoto();
-		
+
 		var data = canvas.toDataURL('image/png');
 		var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
 		var decodedPng = Base64Binary.decode(encodedPng);
@@ -212,12 +220,7 @@
 
 		document.addEventListener("mouseup", release);
 
-		document.addEventListener("mousemove", function(e) {
-			if(dragging !== null) {
-				dragging.style.top = (e.clientY - dragging.parentElement.offsetTop) + "px";
-				dragging.style.left = (e.clientX - dragging.parentElement.offsetLeft - 16) + "px";
-			}
-		});
+		document.addEventListener("mousemove", moveImage);
 
 		if(draggables.length !== 0) {
 			for(var i in draggables) {
