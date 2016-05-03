@@ -10,13 +10,13 @@ window.fbAsyncInit = function() {
   FB.getLoginStatus(function(response) {
   	if (response.status === "connected") {
 			FB.api('/me', function(response) {
-				document.getElementById("user").innerHTML = "Logged as: " + response.name;
-				document.getElementById("logout").style.display = "block";
+				// document.getElementById("user").innerHTML = "Logged as: " + response.name;
+				// document.getElementById("logout").style.display = "block";
 			});
   	}
   	else {
-			document.getElementById("user").innerHTML = "Not logged in";
-			document.getElementById("logout").style.display = "none";
+			// document.getElementById("user").innerHTML = "Not logged in";
+			// document.getElementById("logout").style.display = "none";
 		}
 	});
 };
