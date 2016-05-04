@@ -150,19 +150,25 @@
 		}
 	}
 
-	function checkLoginStatus() {
-	  FB.getLoginStatus(function(response) {
-	  	if (response.status === "connected") {
-				FB.api('/me', function(response) {
-					console.log("Logged as: " + response.name);
-	  			logout_button.style.display = "block";
-				});
-	  	}
-	  	else {
-	  		console.log("Not logged in");
-				logout_button.style.display = "none";
-			}
-		});
+	// function checkLoginState() {
+	//   FB.getLoginStatus(function(response) {
+	//   	if (response.status === "connected") {
+	// 			FB.api('/me', function(response) {
+	// 				console.log("Logged as: " + response.name);
+	//   			logout_button.style.display = "block";
+	// 			});
+	//   	}
+	//   	else {
+	//   		console.log("Not logged in");
+	// 			logout_button.style.display = "none";
+	// 		}
+	// 	});
+	// }
+
+	function checkLoginState() {
+  	FB.getLoginStatus(function(response) {
+	    // statusChangeCallback(response);
+	  });
 	}
 
 	function isInside(obj1, obj2) {
@@ -258,4 +264,5 @@
 
 	window.webcam = {};
 	window.webcam.start = start;
+	window.webcam.checkLoginState = checkLoginState;
 })();
