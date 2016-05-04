@@ -1,7 +1,8 @@
 // https://developers.facebook.com/docs/graph-api/reference/v2.6/user/photos
 (function() {
 	var	width, height, container, video, canvas, context, draggables, dragging, user, 
-	redo_button, takePhoto_button, share_button, logout_button, upload_button;
+	redo_button, takePhoto_button, share_button, logout_button, upload_button,
+	camera_enabled;
 
 	function not_blank(object) {
 		return !(object === null || object === undefined || object.trim() === "");
@@ -126,9 +127,8 @@
 		context.drawImage(video, ((width - video.offsetWidth) / 2), 0, video.offsetWidth, height);
 		video.style.display = "none";
 
-		// preparePhoto();
-
 		takePhoto_button.style.display = "none";
+		upload_button.style.display = "none";
 		redo_button.style.display = "inline-block";
 	}
 
@@ -141,8 +141,28 @@
 			}
 		}
 		takePhoto_button.style.display = "inline-block";
+		upload_button.style.display = "block";
 		redo_button.style.display = "none";
-		showVideoHideCanvas();
+
+		if(camera_enabled) {
+			video.style.display = "block";
+			canvas.style.display = "none";
+		}
+	}
+
+	function checkLoginStatus() {
+	  FB.getLoginStatus(function(response) {
+	  	if (response.status === "connected") {
+				FB.api('/me', function(response) {
+					console.log("Logged as: " + response.name);
+	  			logout_button.style.display = "block";
+				});
+	  	}
+	  	else {
+	  		console.log("Not logged in");
+				logout_button.style.display = "none";
+			}
+		});
 	}
 
 	function isInside(obj1, obj2) {
@@ -158,16 +178,6 @@
 		
 		return ((o1x2 > o2x1 && o1x2 < o2x2) || (o1x1 > o2x1 && o1x1 < o2x2)) &&
 					((o1y2 > o2y1 && o1y2 < o2y2) || (o1y1 > o2y1 && o1y1 < o2y2));
-	}
-
-	function showVideoHideCanvas() {
-		video.style.display = "block";
-		canvas.style.display = "none";
-	}
-
-	function showCanvasHideVideo() {
-		video.style.display = "none";
-		canvas.style.display = "block";
 	}
 	
 	function start(container, options) {
@@ -231,6 +241,7 @@
 		navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 		navigator.getUserMedia({ video: true }, function(stream) {
 			console.log("streaming...");
+			camera_enabled = true;
 			video.src = window.URL.createObjectURL(stream);
 			video.addEventListener("canplaythrough", function() {
 				video.play();
@@ -238,7 +249,10 @@
 		}, function(error) {
 			console.error(error);
 			console.error("Could not find camera... Upload a photo instead...");
-			showCanvasHideVideo();
+			camera_enabled = false;
+			video.style.display = "none";
+			takePhoto_button.style.display = "none";
+			canvas.style.display = "block";
 		});
 	}
 
