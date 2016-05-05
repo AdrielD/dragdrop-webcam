@@ -9,19 +9,19 @@ window.fbAsyncInit = function() {
 
   // function checkLoginState() {
 
-	  FB.getLoginStatus(function(response) {
-	  	console.log(response);
-	  	if (response.status === "connected") {
-				FB.api('/me', function(response) {
-					console.log("Logged as: " + response.name);
-					document.getElementById("logout").style.display = "block";
-				});
-	  	}
-	  	else {
-				console.log("Not logged in");
-				document.getElementById("logout").style.display = "none";
-			}
-		});
+	 //  FB.getLoginStatus(function(response) {
+	 //  	console.log(response);
+	 //  	if (response.status === "connected") {
+		// 		FB.api('/me', function(response) {
+		// 			console.log("Logged as: " + response.name);
+		// 			document.getElementById("logout").style.display = "block";
+		// 		});
+	 //  	}
+	 //  	else {
+		// 		console.log("Not logged in");
+		// 		document.getElementById("logout").style.display = "none";
+		// 	}
+		// });
 
 		// FB.api('/me', function(response) {
 		// 	console.log(response);

@@ -19,8 +19,8 @@
 
 	function moveImage(e) {
 		if(dragging !== null) {
-			dragging.style.top = (e.clientY - dragging.parentElement.offsetTop) + "px";
-			dragging.style.left = (e.clientX - dragging.parentElement.offsetLeft - 16) + "px";
+			dragging.style.top = (e.clientY - dragging.parentElement.offsetTop - dragging.offsetHeight/2) + "px";
+			dragging.style.left = (e.clientX - dragging.parentElement.offsetLeft - dragging.offsetWidth/2) + "px";
 		}
 	}
 
@@ -41,21 +41,9 @@
 
 		FB.login(function(response) {
 			if (response.status === "connected") {
-				console.log(response);
-				FB.api('/me', function(response2) {
-				  console.log(response2);
-				});
 				var auth = response.authResponse.accessToken;
 				postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
-				// FB.api('/me', function(response) {
-				//   user.innerHTML = "Logged as: " + response.name;
-				//   user = response.name;
-				// 	postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
-				// });
 				logout_button.style.display = "block";
-		  }
-		  else {
-		  	console.log("not logged");
 		  }
 		}, {scope: "publish_actions"});
 	}
@@ -63,7 +51,6 @@
 	// https://gist.github.com/andyburke/1498758
 	function postImageToFacebook(authToken, filename, mimeType, imageData, message ) {
 
-		// https://gist.github.com/andyburke/1498758
 		if ( XMLHttpRequest.prototype.sendAsBinary === undefined ) {
 		  XMLHttpRequest.prototype.sendAsBinary = function(string) {
 		    var bytes = Array.prototype.map.call(string, function(c) {
@@ -164,27 +151,6 @@
 		}
 	}
 
-	function checkLoginState() {
-	  FB.getLoginStatus(function(response) {
-	  	if (response.status === "connected") {
-				FB.api('/me', function(response) {
-					console.log("Logged as: " + response.name);
-	  			logout_button.style.display = "block";
-				});
-	  	}
-	  	else {
-	  		console.log("Not logged in");
-				logout_button.style.display = "none";
-			}
-		});
-	}
-
-	// function checkLoginState() {
- //  	FB.getLoginStatus(function(response) {
-	//     // statusChangeCallback(response);
-	//   });
-	// }
-
 	function isInside(obj1, obj2) {
 		o1x1 = obj1.offsetLeft;
 		o1x2 = obj1.offsetLeft + obj1.offsetWidth;
@@ -205,20 +171,15 @@
 		container.style.overflow = "hidden";
 		width = container.offsetWidth;
 		height = container.offsetHeight;
-		// height = width / (4 / 3);
 
 		video = document.createElement("video");
 		container.appendChild(video);
 		video.id = "webcam-video";
-		// video.style.width = "100% !important";
 		video.style.width = (height / (3 / 4)) + "px";
-		// video.style.width = width + "px";
-		// video.style.height = "auto !important";
 		video.style.height = height + "px";
 		video.style.display = "block";
 		video.style.position = "relative";
 		video.style.marginLeft = ((width - video.offsetWidth) / 2) + "px";
-		// video.style.objectFit = "none";
 
 		canvas = document.createElement("canvas");
 		container.appendChild(canvas);
@@ -234,27 +195,25 @@
 		dragging = null;
 
 		redo_button = document.getElementById(not_blank(options.redo) ? options.redo : "redo");
-		redo_button.addEventListener("click", redo);
-
 		takePhoto_button = document.getElementById(not_blank(options.takePhoto) ? options.takePhoto : "takePhoto");
-		takePhoto_button.addEventListener("click", takePhoto);
-
 		share_button = document.getElementById(not_blank(options.share) ? options.share : "share");
-		share_button.addEventListener("click", doShare);
-
 		logout_button = document.getElementById(not_blank(options.logout) ? options.logout : "logout");
-		logout_button.addEventListener("click", logoutUser);
-
 		upload_button = document.getElementById(not_blank(options.upload) ? options.upload : "upload");
+		
+		redo_button.addEventListener("click", redo);
+		takePhoto_button.addEventListener("click", takePhoto);
+		share_button.addEventListener("click", doShare);
+		logout_button.addEventListener("click", logoutUser);
 		upload_button.addEventListener('change', handleImage, false);
 
-		document.addEventListener("mouseup", release);
-
 		document.addEventListener("mousemove", moveImage);
+		document.addEventListener("mouseup", release);
 
 		if(draggables.length !== 0) {
 			for(var i in draggables) {
-				document.getElementById(draggables[i]).addEventListener("mousedown", drag);
+				var item = document.getElementById(draggables[i]);
+				item.setAttribute("draggable", false);
+				item.addEventListener("mousedown", drag);
 			}
 		}
 
@@ -278,5 +237,4 @@
 
 	window.webcam = {};
 	window.webcam.start = start;
-	window.webcam.checkLoginState = checkLoginState;
 })();
