@@ -5,22 +5,27 @@ window.fbAsyncInit = function() {
     appId      : (window.location.hostname == 'localhost') ? '227393377626524' : '224702951228900',
     xfbml      : true,
     version    : 'v2.6'
-  }, function(response){
-  	console.log(response);
   });
 
   // function checkLoginState() {
-	 //  FB.getLoginStatus(function(response) {
-	 //  	if (response.status === "connected") {
-		// 		FB.api('/me', function(response) {
-		// 			// document.getElementById("user").innerHTML = "Logged as: " + response.name;
-		// 			// document.getElementById("logout").style.display = "block";
-		// 		});
-	 //  	}
-	 //  	else {
-		// 		// document.getElementById("user").innerHTML = "Not logged in";
-		// 		// document.getElementById("logout").style.display = "none";
-		// 	}
+
+	  FB.getLoginStatus(function(response) {
+	  	console.log(response);
+	  	if (response.status === "connected") {
+				FB.api('/me', function(response) {
+					console.log("Logged as: " + response.name);
+					document.getElementById("logout").style.display = "block";
+				});
+	  	}
+	  	else {
+				console.log("Not logged in");
+				document.getElementById("logout").style.display = "none";
+			}
+		});
+
+		// FB.api('/me', function(response) {
+		// 	console.log(response);
+		// 	document.getElementById("logout").style.display = "block";
 		// });
   // }
 };

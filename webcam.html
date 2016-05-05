@@ -2,8 +2,8 @@
 <html>
 	<head>
 		<title></title>
-		<script src="base64binary.js"></script>
 		<script src="facebook.js"></script>
+		<script src="base64binary.js"></script>
 		<script src="webcam.js"></script>
 	</head>
 	<body style="margin: 0 auto; padding: 0;">
@@ -16,12 +16,12 @@
 			<img id="compass-icon" style="position: absolute; left:96px; top:0; width: 32px; height: 32px" src="images/compass.png">
 			<img id="earth-globe-icon" style="position: absolute; left:128px; top:0; width: 32px; height: 32px" src="images/earth-globe.png">
 			<img id="flasks-icon" style="position: absolute; left:160px; top:0; width: 32px; height: 32px" src="images/flasks.png">
-			<button id="take-photo">Click!</button>
+			<button id="take-photo" >Click!</button>
 			<button id="redo" style="display: none";>Redo!</button>
-			<button id="share" style="display: block";>Share!</button>
-			<button id="logout" style="display: block";>Logout</button>
-			<input type="file" id="upload"/>
-			<!-- <fb:login-button scope="public_profile,email" onlogin="webcam.checkLoginState();"></fb:login-button> -->
+			<button id="share" style="display: none";>Share!</button>
+			<input type="file" style="display: block" id="upload" accept="image/*"/>
+			<button id="logout" style="display: none";>Logout</button>
+			<!-- <fb:login-button scope="publish_actions" onlogin="webcam.checkLoginState();"></fb:login-button> -->
 			<!-- <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="true" data-auto-logout-link="true"></div> -->
 		</div>
 		<script>

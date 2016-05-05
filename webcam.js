@@ -28,6 +28,7 @@
 		FB.logout(function(response) {
 			user = "";
 			console.log(response);
+			logout_button.style.display = "none";
 		});
 	}
 
@@ -40,12 +41,18 @@
 
 		FB.login(function(response) {
 			if (response.status === "connected") {
-				var auth = response.authResponse.accessToken;
-				FB.api('/me', function(response) {
-				  // user.innerHTML = "Logged as: " + response.name;
-				  user = response.name;
-					postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
+				console.log(response);
+				FB.api('/me', function(response2) {
+				  console.log(response2);
 				});
+				var auth = response.authResponse.accessToken;
+				postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
+				// FB.api('/me', function(response) {
+				//   user.innerHTML = "Logged as: " + response.name;
+				//   user = response.name;
+				// 	postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
+				// });
+				logout_button.style.display = "block";
 		  }
 		  else {
 		  	console.log("not logged");
@@ -106,6 +113,10 @@
     };
 
     reader.readAsDataURL(e.target.files[0]);
+    takePhoto_button.style.display = "none";
+		upload_button.style.display = "none";
+		redo_button.style.display = "block";
+		share_button.style.display = "block";
 	}
 
 	function preparePhoto() {
@@ -129,7 +140,8 @@
 
 		takePhoto_button.style.display = "none";
 		upload_button.style.display = "none";
-		redo_button.style.display = "inline-block";
+		redo_button.style.display = "block";
+		share_button.style.display = "block";
 	}
 
 	function redo() {
@@ -140,36 +152,38 @@
 				document.getElementById(draggables[i]).style.display = "block";
 			}
 		}
-		takePhoto_button.style.display = "inline-block";
 		upload_button.style.display = "block";
+		upload_button.value = "";
 		redo_button.style.display = "none";
+		share_button.style.display = "none";
 
 		if(camera_enabled) {
+			takePhoto_button.style.display = "block";
 			video.style.display = "block";
 			canvas.style.display = "none";
 		}
 	}
 
-	// function checkLoginState() {
-	//   FB.getLoginStatus(function(response) {
-	//   	if (response.status === "connected") {
-	// 			FB.api('/me', function(response) {
-	// 				console.log("Logged as: " + response.name);
-	//   			logout_button.style.display = "block";
-	// 			});
-	//   	}
-	//   	else {
-	//   		console.log("Not logged in");
-	// 			logout_button.style.display = "none";
-	// 		}
-	// 	});
-	// }
-
 	function checkLoginState() {
-  	FB.getLoginStatus(function(response) {
-	    // statusChangeCallback(response);
-	  });
+	  FB.getLoginStatus(function(response) {
+	  	if (response.status === "connected") {
+				FB.api('/me', function(response) {
+					console.log("Logged as: " + response.name);
+	  			logout_button.style.display = "block";
+				});
+	  	}
+	  	else {
+	  		console.log("Not logged in");
+				logout_button.style.display = "none";
+			}
+		});
 	}
+
+	// function checkLoginState() {
+ //  	FB.getLoginStatus(function(response) {
+	//     // statusChangeCallback(response);
+	//   });
+	// }
 
 	function isInside(obj1, obj2) {
 		o1x1 = obj1.offsetLeft;
