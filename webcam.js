@@ -100,6 +100,10 @@
     };
 
     reader.readAsDataURL(e.target.files[0]);
+    
+    canvas.style.display = "block";
+    video.style.display = "none";
+
     takePhoto_button.style.display = "none";
 		upload_button.style.display = "none";
 		redo_button.style.display = "block";
@@ -113,7 +117,7 @@
 				if(isInside(img, canvas)) {
 					context.drawImage(img, img.offsetLeft-canvas.offsetLeft, img.offsetTop-canvas.offsetTop, img.offsetWidth, img.offsetHeight);
 				}
-				img.style.display = "none";
+				// img.style.display = "none";
 			}
 		}
 	}
