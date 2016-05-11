@@ -242,3 +242,92 @@
 	window.webcam = {};
 	window.webcam.start = start;
 })();
+
+// Add later:
+// function startStream(stream) {
+// 		console.log("streaming...");
+// 		camera_enabled = true;
+// 		video.src = window.URL.createObjectURL(stream);
+// 		video.addEventListener("canplaythrough", function() {
+// 			video.play();
+// 		});
+// 		video.play();
+// 	}
+
+// 	function notStreaming(error) {
+// 		console.error(error);
+// 		console.error("Could not find camera... Upload a photo instead...");
+// 		camera_enabled = false;
+// 		video.style.display = "none";
+// 		takePhoto_button.style.display = "none";
+// 		canvas.style.display = "block";
+// 	}
+	
+// 	function start(container, options) {
+// 		container = document.getElementById(not_blank(container) ? container : "webcam");
+// 		container.style.overflow = "hidden";
+// 		width = container.offsetWidth;
+// 		height = container.offsetHeight;
+
+// 		video = document.createElement("video");
+// 		container.appendChild(video);
+// 		video.id = "webcam-video";
+// 		video.style.width = (height / (3 / 4)) + "px";
+// 		video.style.height = height + "px";
+// 		video.style.display = "block";
+// 		video.style.position = "relative";
+// 		video.style.marginLeft = ((width - video.offsetWidth) / 2) + "px";
+
+// 		canvas = document.createElement("canvas");
+// 		container.appendChild(canvas);
+// 		canvas.id = "webcam-canvas";
+// 		canvas.width = width;
+// 		canvas.height = height;
+// 		canvas.style.display = "none";
+// 		canvas.style.position = "relative";
+
+// 		context = canvas.getContext("2d");
+
+// 		draggables = options.draggables;
+// 		dragging = null;
+
+// 		redo_button = document.getElementById(not_blank(options.redo) ? options.redo : "redo");
+// 		takePhoto_button = document.getElementById(not_blank(options.takePhoto) ? options.takePhoto : "takePhoto");
+// 		share_button = document.getElementById(not_blank(options.share) ? options.share : "share");
+// 		logout_button = document.getElementById(not_blank(options.logout) ? options.logout : "logout");
+// 		upload_button = document.getElementById(not_blank(options.upload) ? options.upload : "upload");
+		
+// 		var upload = document.createElement("input");
+// 		upload.type = "file";
+// 		upload.accept = "image/*";
+// 		upload.style.visibility = "hidden";
+		
+// 		share_button.style.display = "none";
+// 		logout_button.style.display = "none";
+
+// 		redo_button.addEventListener("click", redo);
+// 		takePhoto_button.addEventListener("click", takePhoto);
+// 		share_button.addEventListener("click", doShare);
+// 		logout_button.addEventListener("click", logoutUser);
+// 		// upload_button.addEventListener('change', handleImage, false);
+// 		upload_button.addEventListener('click', function() { upload.click(); });
+// 		upload.addEventListener('change', handleImage, false);
+
+// 		document.addEventListener("mousemove", moveImage);
+// 		document.addEventListener("mouseup", release);
+
+// 		if(draggables.length !== 0) {
+// 			for(var i in draggables) {
+// 				var item = document.getElementById(draggables[i]);
+// 				item.setAttribute("draggable", false);
+// 				item.addEventListener("mousedown", drag);
+// 			}
+// 		}
+
+// 		if (navigator.mediaDevices.getUserMedia) {
+// 			navigator.mediaDevices.getUserMedia({ video: true }).then(startStream).catch(notStreaming);
+// 		} else {
+// 			navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+// 			navigator.getUserMedia({ video: true }, startStream, notStreaming);			
+// 		}
+// 	}
