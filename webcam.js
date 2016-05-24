@@ -38,12 +38,34 @@
 		var data = canvas.toDataURL('image/png');
 		var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
 		var decodedPng = Base64Binary.decode(encodedPng);
+		var cont = container;
 
 		FB.login(function(response) {
 			if (response.status === "connected") {
 				var auth = response.authResponse.accessToken;
 				postImageToFacebook(auth, "photo", "image/png", decodedPng, "");
 				logout_button.style.display = "block";
+
+				var ok_message = document.createElement("div");
+	    	ok_message.style.id = "ok_message";
+	    	ok_message.style.backgroundColor = "#22FF22";
+	    	ok_message.style.color = "#FFF";
+	    	ok_message.style.position = "absolute";
+	    	ok_message.style.top = "100px";
+	    	ok_message.style.left = "0";
+	    	ok_message.style.width = "100%";
+	    	ok_message.style.height = "30px";
+	    	ok_message.style.fontSize = "18px";
+	    	ok_message.style.verticalHeight = "middle";
+	    	ok_message.style.display = "block";
+	    	ok_message.style.textAlign = "center";
+	    	ok_message.innerHTML = "Sua foto foi postada na timeline!";
+
+	    	document.body.appendChild(ok_message);
+
+	    	setTimeout(function() {
+	    		document.body.removeChild(ok_message);
+	    	}, 5000);
 		  }
 		}, {scope: "publish_actions"});
 	}
@@ -112,12 +134,14 @@
 
 	function preparePhoto() {
 		if(draggables.length !== 0) {
-			for(var i in draggables) {
+			for(var i = 0; i < draggables.length; i++) {
 				var img = document.getElementById(draggables[i]);
-				if(isInside(img, canvas)) {
+				// if(isInside(img, canvas)) {
+					// console.log(img.offsetLeft);
+					// console.log(canvas.offsetLeft);
 					context.drawImage(img, img.offsetLeft-canvas.offsetLeft, img.offsetTop-canvas.offsetTop, img.offsetWidth, img.offsetHeight);
-				}
-				// img.style.display = "none";
+				// }
+				img.style.display = "none";
 			}
 		}
 	}
@@ -147,6 +171,7 @@
 		upload_button.value = "";
 		redo_button.style.display = "none";
 		share_button.style.display = "none";
+		logout_button.style.display = "none";
 
 		if(camera_enabled) {
 			takePhoto_button.style.display = "block";
@@ -168,6 +193,25 @@
 		
 		return ((o1x2 > o2x1 && o1x2 < o2x2) || (o1x1 > o2x1 && o1x1 < o2x2)) &&
 					((o1y2 > o2y1 && o1y2 < o2y2) || (o1y1 > o2y1 && o1y1 < o2y2));
+	}
+
+	function startStream(stream) {
+		console.log("streaming...");
+		camera_enabled = true;
+		video.src = window.URL.createObjectURL(stream);
+		video.addEventListener("canplaythrough", function() {
+			video.play();
+		});
+		video.play();
+	}
+
+	function notStreaming(error) {
+		console.error(error);
+		console.error("Could not find camera... Upload a photo instead...");
+		camera_enabled = false;
+		video.style.display = "none";
+		takePhoto_button.style.display = "none";
+		canvas.style.display = "block";
 	}
 	
 	function start(container, options) {
@@ -204,11 +248,22 @@
 		logout_button = document.getElementById(not_blank(options.logout) ? options.logout : "logout");
 		upload_button = document.getElementById(not_blank(options.upload) ? options.upload : "upload");
 		
+		var upload = document.createElement("input");
+		upload.type = "file";
+		upload.accept = "image/*";
+		upload.style.visibility = "hidden";
+		
+		share_button.style.display = "none";
+		logout_button.style.display = "none";
+		redo_button.style.display = "none";
+
 		redo_button.addEventListener("click", redo);
 		takePhoto_button.addEventListener("click", takePhoto);
 		share_button.addEventListener("click", doShare);
 		logout_button.addEventListener("click", logoutUser);
-		upload_button.addEventListener('change', handleImage, false);
+		// upload_button.addEventListener('change', handleImage, false);
+		upload_button.addEventListener('click', function() { upload.click(); });
+		upload.addEventListener('change', handleImage, false);
 
 		document.addEventListener("mousemove", moveImage);
 		document.addEventListener("mouseup", release);
@@ -221,113 +276,14 @@
 			}
 		}
 
-		navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-		navigator.getUserMedia({ video: true }, function(stream) {
-			console.log("streaming...");
-			camera_enabled = true;
-			video.src = window.URL.createObjectURL(stream);
-			video.addEventListener("canplaythrough", function() {
-				video.play();
-			});
-		}, function(error) {
-			console.error(error);
-			console.error("Could not find camera... Upload a photo instead...");
-			camera_enabled = false;
-			video.style.display = "none";
-			takePhoto_button.style.display = "none";
-			canvas.style.display = "block";
-		});
+		if (navigator.mediaDevices.getUserMedia) {
+			navigator.mediaDevices.getUserMedia({ video: true }).then(startStream).catch(notStreaming);
+		} else {
+			navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+			navigator.getUserMedia({ video: true }, startStream, notStreaming);			
+		}
 	}
 
 	window.webcam = {};
 	window.webcam.start = start;
 })();
-
-// Add later:
-// function startStream(stream) {
-// 		console.log("streaming...");
-// 		camera_enabled = true;
-// 		video.src = window.URL.createObjectURL(stream);
-// 		video.addEventListener("canplaythrough", function() {
-// 			video.play();
-// 		});
-// 		video.play();
-// 	}
-
-// 	function notStreaming(error) {
-// 		console.error(error);
-// 		console.error("Could not find camera... Upload a photo instead...");
-// 		camera_enabled = false;
-// 		video.style.display = "none";
-// 		takePhoto_button.style.display = "none";
-// 		canvas.style.display = "block";
-// 	}
-	
-// 	function start(container, options) {
-// 		container = document.getElementById(not_blank(container) ? container : "webcam");
-// 		container.style.overflow = "hidden";
-// 		width = container.offsetWidth;
-// 		height = container.offsetHeight;
-
-// 		video = document.createElement("video");
-// 		container.appendChild(video);
-// 		video.id = "webcam-video";
-// 		video.style.width = (height / (3 / 4)) + "px";
-// 		video.style.height = height + "px";
-// 		video.style.display = "block";
-// 		video.style.position = "relative";
-// 		video.style.marginLeft = ((width - video.offsetWidth) / 2) + "px";
-
-// 		canvas = document.createElement("canvas");
-// 		container.appendChild(canvas);
-// 		canvas.id = "webcam-canvas";
-// 		canvas.width = width;
-// 		canvas.height = height;
-// 		canvas.style.display = "none";
-// 		canvas.style.position = "relative";
-
-// 		context = canvas.getContext("2d");
-
-// 		draggables = options.draggables;
-// 		dragging = null;
-
-// 		redo_button = document.getElementById(not_blank(options.redo) ? options.redo : "redo");
-// 		takePhoto_button = document.getElementById(not_blank(options.takePhoto) ? options.takePhoto : "takePhoto");
-// 		share_button = document.getElementById(not_blank(options.share) ? options.share : "share");
-// 		logout_button = document.getElementById(not_blank(options.logout) ? options.logout : "logout");
-// 		upload_button = document.getElementById(not_blank(options.upload) ? options.upload : "upload");
-		
-// 		var upload = document.createElement("input");
-// 		upload.type = "file";
-// 		upload.accept = "image/*";
-// 		upload.style.visibility = "hidden";
-		
-// 		share_button.style.display = "none";
-// 		logout_button.style.display = "none";
-
-// 		redo_button.addEventListener("click", redo);
-// 		takePhoto_button.addEventListener("click", takePhoto);
-// 		share_button.addEventListener("click", doShare);
-// 		logout_button.addEventListener("click", logoutUser);
-// 		// upload_button.addEventListener('change', handleImage, false);
-// 		upload_button.addEventListener('click', function() { upload.click(); });
-// 		upload.addEventListener('change', handleImage, false);
-
-// 		document.addEventListener("mousemove", moveImage);
-// 		document.addEventListener("mouseup", release);
-
-// 		if(draggables.length !== 0) {
-// 			for(var i in draggables) {
-// 				var item = document.getElementById(draggables[i]);
-// 				item.setAttribute("draggable", false);
-// 				item.addEventListener("mousedown", drag);
-// 			}
-// 		}
-
-// 		if (navigator.mediaDevices.getUserMedia) {
-// 			navigator.mediaDevices.getUserMedia({ video: true }).then(startStream).catch(notStreaming);
-// 		} else {
-// 			navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-// 			navigator.getUserMedia({ video: true }, startStream, notStreaming);			
-// 		}
-// 	}
